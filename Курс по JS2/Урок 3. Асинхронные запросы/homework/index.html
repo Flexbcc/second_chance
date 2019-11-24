@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson 3</title>
+    <link rel="script" href="main.js">
+</head>
+<body>
+<div id="ajax-block"></div>
+<button id="ajax-get"> async get data</button>
+
+<script>
+    let userJson  = '{"name" : "Ann" , "age" : 25 , "isAdmin" : true}';//  JSON всегда строка , ключи в скобках, строки тоже в скобках ,если число или булевое значение то без скобок
+    console.log(userJson);
+    let user = JSON.parse(userJson); // переводим строку в обьект , парсить разбор строки в обьект
+    console.log(user);
+
+    user.dateCreated = '2019-05-01';
+    user.adress = {
+        city: 'Moscow',
+        postalCode: 109400,
+    };
+
+    console.log(user);
+    // let userJson2 = JSON.stringify(user);  //Перевод из обьекта в строку
+    // let userJson2 = JSON.stringify(user , ['name']);  //вторым параметром будет передано что именно нужно преобразовать в строку
+    //если указать обьект , то необходимо  указывать те ключи которые находятся в данном обьекте
+    // let userJson2 = JSON.stringify(user , ['name', 'dateCreated', 'adress', 'city' , 'postalCode' , 'test'] , 4);
+    // третий параметр ЧИСЛО влияет на табы , более подходящие отображение
+    // можно указать только значение передающее и число отступов, 1 и 3 параметр, для этого необходимо указать вторым параметром NULL
+    let userJson2 = JSON.stringify(user , null , 4);
+
+    console.log(userJson2);
+
+    let user2 = JSON.parse(userJson2, (key, value) => {
+        // console.log(`key : ${key} , value : ${value}`);
+        // console.log(key , value);
+        if (key === 'dateCreated'){
+            value = new Date(value);
+        }
+        return value;
+    });
+
+    // console.log(user2);  //Callback функция
+    //
+    // const num  = ( a , callback) => {
+    //     setTimeout(() => {
+    //         let b = 20 + a ;
+    //
+    //     } , 500);
+    // };
+    // console.log(num());
+
+    // let num = (a) => {
+    //     return new Promise((resolve ,reject) => {
+    //         setTimeout(() =>{
+    //             if (a) {
+    //                 resolve(a+10)
+    //             } else {
+    //                 reject('Error!');
+    //             }
+    //         }, 2000 );
+    //     });
+    // };
+    // // console.log(num())   - показывает обьект промисс
+    //
+    // num(2300).then((data) => {
+    //     console.log(data);  // Показывает  значение
+    // });
+
+    document.addEventListener('DOMContentLoaded', () =>{
+        document.getElementById('ajax-get').addEventListener('click', () => {
+    //         //ES5
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.open('GET', 'tel.json', true); // true - асинхронный запрос
+    //         xhr.onreadystatechange = () => {
+    //             // xhr.onreadystatechange
+    //             // 0 -запрос не инициализирован
+    //             // 1 - идет загрузка данных
+    //             // 2 - запрос принят сервером
+    //             // 3 -идет обмен данными
+    //             // 4 - запрос выполнен
+    //             if (xhr.readyState !== 4 ) return;
+    //             if (xhr.status !== 200) {
+    //                 console.log(`Error ${xhr.status} ${xhr.statusText}`);
+    //             } else {
+    //                 console.log(` OK! ${xhr.responseText}`);
+    //                 let data = JSON.parse(xhr.responseText);
+    //                 console.log(data);
+    //                 let block = document.getElementById('ajax-block');
+    //                 block.insertAdjacentHTML('beforeend', `<p>${data.name} - <strong>${data.tel}</strong></p>`)
+    //             }
+    //         };
+    //         xhr.send()
+            //ES 6
+            fetch('tel.json')
+                .then(result => result.json())
+                .then(data=>{
+                    console.log(data);
+                    let block = document.getElementById('ajax-block');
+                    block.insertAdjacentHTML('beforeend', `<p>${data.name} - <strong>${data.tel}</strong></p>`)
+                })
+        });
+    });
+
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>
